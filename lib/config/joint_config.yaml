@@ -1,0 +1,104 @@
+GPU: True
+GPUID: 0
+WORKERS: 12
+PRINT_FREQ: 250
+TEST_FREQ: 1
+PIN_MEMORY: False
+OUTPUT_DIR: 'output'
+LOCAL_RANK: 0
+
+CUDNN:
+  BENCHMARK: True
+  DETERMINISTIC: False
+  ENABLED: True
+
+DATASET:
+  DATASET: general
+  JSON_FILE: {'train': 'data/gt/data_train.cfg', 'val': 'data/gt/data_test.cfg'}
+  ROOT:  "data/img"
+  IF_VALID: True
+  
+  COLOR: False
+  CHAR_FILE: 'lib/dataset/txt/IDS_V4.txt'
+  DICT_FILE: 'lib/dataset/txt/gt_radicals.txt'
+  CROP_PATH: '/apdcephfs/private_v_mbxue/dataset/printed/crop'
+  BLANK_LABEL: 514
+  VALID_LABEL: 515
+  START_LABEL: 516
+  END_LABEL: 517
+
+  STD: 0.0078125
+  MEAN: 128
+  MAX_LEN: 63
+  
+
+TRAIN:
+  BATCH_SIZE_PER_GPU: 256
+  SHUFFLE: True
+  BEGIN_EPOCH: 0
+  END_EPOCH: 400
+
+  LR: 0.1
+  WD: 0.0
+  LR_STEP: [100,200,300]
+  LR_FACTOR: 0.8
+
+  OPTIMIZER: 'sgd'
+  MOMENTUM: 0.1
+  NESTEROV: False
+  DROPOUT: 0.2
+  FREEZE_ENCODER: True
+
+  PATTERN:
+    JOINT: True
+    IF_DUAL: True
+    IF_SIM: True
+    GAN: False
+    SYN: False
+    
+  LOSS:
+    R: 1.
+    G: 1.
+    J: 0.01
+    R_F: 0.05
+    J_F: 0.01
+    D_R_str: 0.1
+    D_F_str: 0.1
+    D_P_str: 1
+    D_R_syn: 1
+    D_F_syn: 0.5
+    D_P_syn: 10
+
+  FINETUNE:
+    IS_FINETUNE: False
+    FINETUNE_CHECKPOINIT: 'checkpoint_r.pth'
+    FREEZE: False 
+  
+
+TEST:
+  BATCH_SIZE_PER_GPU: 32
+  SHUFFLE: False
+  NUM_TEST_BATCH: 200
+  NUM_TEST_DISP: 10
+  BESTACC: 0
+  BESTLOSS: 10.0
+
+MODEL:
+  NAME: 'J'
+  CRITERION: 'JOINT'
+  IMAGE_SIZE:
+    H: 32
+    W: 32
+  NUM_CLASS: 0
+  NUM_HIDDEN: 512
+  NUM_HEAD: 4
+  NUM_LAYER: 8
+  RPE: False
+  TREE_POS: True
+  R:
+    EN_POS_EMBED_LEN: 16
+    DE_POS_EMBED_LEN: 1023
+  G:
+    EN_POS_EMBED_LEN: 1023
+    DE_POS_EMBED_LEN: 16
+  SAVEPATH: ''
